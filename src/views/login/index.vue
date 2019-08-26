@@ -67,16 +67,19 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
         // 如果校验成功，进行登录
-          this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', 'this.loginForm')
+          this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
             .then(res => {
               // res是响应对象 包含响应数据
               const data = res.data
               // 后台返回的json内容 已经转换成了对象
               console.log(data)
-            //   登录成功后做什么事情？？
+              // 登录成功后做什么事情？？
+              // 1.跳转到首页
+              this.$router.push('/')
+              // 2.保持登录状态，token
             })
             .catch(() => {
-              // 提示错误 使用组件 消息提示组件
+              // 提示错误  使用组件=>消息提示组件
               this.$message.error('用户名或密码错误')
             })
         }
