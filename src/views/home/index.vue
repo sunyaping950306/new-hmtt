@@ -64,7 +64,10 @@
         </el-dropdown>
       </el-header>
 
-      <el-main>Main</el-main>
+      <el-main>
+        <!-- 显示二级路由的地方 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>

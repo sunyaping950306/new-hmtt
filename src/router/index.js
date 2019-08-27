@@ -5,6 +5,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/login'
 import Home from '@/views/home'
+import Welcome from '@/views/welcome'
 
 // 注册vue-router
 Vue.use(VueRouter)
@@ -13,7 +14,11 @@ const router = new VueRouter({
   // 路由规则
   routes: [
     { path: '/login', name: 'login', component: Login },
-    { path: '/', name: 'home', component: Home }
+    { path: '/',
+      component: Home,
+      children: [
+        { path: '/', name: 'welcome', component: Welcome }
+      ] }
   ]
 })
 // 导出、挂载到main.js根实例下
