@@ -64,25 +64,33 @@ export default {
   methods: {
     login () {
     // 整体表单的校验
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-        // 如果校验成功，进行登录
-          this.$http.post('authorizations', this.loginForm)
-            .then(res => {
-              // res是响应对象 包含响应数据
-              const data = res.data
-              // 后台返回的json内容 已经转换成了对象
-              console.log(data)
-              // 登录成功后做什么事情？？
-              // 1.跳转到首页
-              this.$router.push('/')
-              // 2.保持登录状态,使用sessionStorage来存储，关闭浏览器会失效
-              window.sessionStorage.setItem('new-hmtt', JSON.stringify(res.data.data))
-            })
-            .catch(() => {
-              // 提示错误  使用组件=>消息提示组件
-              this.$message.error('用户名或密码错误')
-            })
+          // // 如果校验成功，进行登录
+          // this.$http.post('authorizations', this.loginForm)
+          //   .then(res => {
+          //     // res是响应对象 包含响应数据
+          //     const data = res.data
+          //     // 后台返回的json内容 已经转换成了对象
+          //     console.log(data)
+          //     // 登录成功后做什么事情？？
+          //     // 1.跳转到首页
+          //     this.$router.push('/')
+          //     // 2.保持登录状态,使用sessionStorage来存储，关闭浏览器会失效
+          //     window.sessionStorage.setItem('new-hmtt', JSON.stringify(res.data.data))
+          //   })
+          //   .catch(() => {
+          //     // 提示错误  使用组件=>消息提示组件
+          //     this.$message.error('用户名或密码错误')
+          //   })
+          try {
+            // try{ 业务逻辑 }catch(err){ 业务逻辑失败调用catch,进行错误的处理 }
+            const res = await this.$http.post('authorizations', this.loginForm)
+            window.sessionStorage.setItem('new-hmtt', JSON.stringify(res.data.data))
+            this.$router.push('/')
+          } catch (err) {
+            this.$message.error('用户名或密码错误')
+          }
         }
       })
     }
