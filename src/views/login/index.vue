@@ -76,7 +76,8 @@ export default {
               // 登录成功后做什么事情？？
               // 1.跳转到首页
               this.$router.push('/')
-              // 2.保持登录状态，token
+              // 2.保持登录状态,使用sessionStorage来存储，关闭浏览器会失效
+              window.sessionStorage.setItem('new-hmtt', JSON.stringify(res.data.data))
             })
             .catch(() => {
               // 提示错误  使用组件=>消息提示组件

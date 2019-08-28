@@ -10,6 +10,13 @@ import router from '@/router'
 
 // 导入axios并挂载到vue原型中
 import axios from 'axios'
+// 基准路径
+axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
+// 请求头
+axios.defaults.header = {
+  // token需要认证的字段 值：注意需要加上前缀'Bearer'
+  Authorization: 'Bearer' + JSON.parse(window.sessionStorage.getItem('new-hmtt')).token
+}
 Vue.prototype.$http = axios
 
 // 在全局范围内注册element-ui组件库

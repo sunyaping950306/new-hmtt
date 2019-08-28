@@ -23,5 +23,11 @@ const router = new VueRouter({
     { path: '*', name: '404', component: NotFound }
   ]
 })
+// 注册一个全局的前置导航守卫
+router.beforeEach((to, from, next) => {
+  const user = window.sessionStorage.getItem('new-hmtt')
+  if (to.path !== '/login' && !user) return next('/login')
+  next()
+})
 // 导出、挂载到main.js根实例下
 export default router
