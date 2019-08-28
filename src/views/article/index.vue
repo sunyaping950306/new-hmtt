@@ -4,10 +4,7 @@
     <el-card class="box-card">
       <!-- 面包屑 -->
       <div slot="header">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>内容管理</el-breadcrumb-item>
-        </el-breadcrumb>
+          <my-bread>内容管理</my-bread>
       </div>
       <!-- 筛选容器内容 -->
       <el-form ref="form" :model="reqParams" size="small" label-width="80px">
@@ -50,6 +47,7 @@
 </template>
 
 <script>
+import MyBread from '@/components/my-bread.vue'
 export default {
   data () {
     return {
@@ -67,7 +65,7 @@ export default {
       dataValues: []
     }
   },
-  components: {}
+  components: { MyBread }
 }
 </script>
 
