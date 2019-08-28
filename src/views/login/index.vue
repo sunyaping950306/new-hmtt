@@ -67,7 +67,7 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
         // 如果校验成功，进行登录
-          this.$http.post('http://ttapi.research.itcast.cn/mp/v1_0/authorizations', this.loginForm)
+          this.$http.post('authorizations', this.loginForm)
             .then(res => {
               // res是响应对象 包含响应数据
               const data = res.data
