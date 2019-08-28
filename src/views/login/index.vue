@@ -98,7 +98,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style scoped lang="less">
 .login-container {
   position: absolute;
   left: 0;
