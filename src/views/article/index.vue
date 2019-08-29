@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import MyBread from '@/components/my-bread.vue'
+
 export default {
   data () {
     return {
@@ -65,7 +65,18 @@ export default {
       dataValues: []
     }
   },
-  components: { MyBread }
+  created () {
+    // 获取频道数据
+    this.getChannelOptions()
+  },
+  methods: {
+    async getChannelOptions () {
+      const { data: { data } } = await this.$http.get('channels')
+      this.channelOptions = data.channels
+    }
+
+  },
+  components: { }
 }
 </script>
 

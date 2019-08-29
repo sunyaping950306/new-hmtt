@@ -9,10 +9,7 @@
 
 <script>
 export default {
-  data () {
-    return {}
-  },
-  components: {}
+  name: 'my-bread'
 }
 </script>
 
