@@ -47,7 +47,7 @@
     <el-card>
       <div slot="header">
         根据筛选结果共查询到
-        <b>0</b>条结果
+        <b>{{total}}</b>条结果
       </div>
       <el-table :data="articles" style="width: 100%">
         <el-table-column label="封面">
@@ -56,7 +56,7 @@
             <el-image lazy :src="scope.row.cover.images[0]" style="width:100px;height:75px">
               <!-- 加载不成功则显示失败图片 -->
               <div slot="error" class="image-slot">
-               <img src="../../assets/images/error.gif" style="width:100px;height:75px" alt="">
+                <img src="../../assets/images/error.gif" style="width:100px;height:75px" alt />
               </div>
             </el-image>
           </template>
@@ -73,14 +73,21 @@
         </el-table-column>
         <el-table-column label="发布时间" prop="pubdate"></el-table-column>
         <el-table-column label="操作" width="120px">
-          <template slot="scope">
-            <el-button type="primary" icon="el-icon-edit" plain circle></el-button>
-            <el-button type="danger" icon="el-icon-delete" plain circle></el-button>
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-edit"  @click="edit(scope.row.id)" plain circle></el-button>
+            <el-button type="danger" icon="el-icon-delete" @click="del(scope.row.id)" plain circle></el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="box">
-        <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="total"
+          :current-page="reqParams.page"
+          :page-size="reqParams.per_page"
+          @current-change="changePager"
+        ></el-pagination>
       </div>
     </el-card>
   </div>
@@ -96,14 +103,18 @@ export default {
         status: null,
         channel_id: null,
         begin_pubdate: null,
-        end_pubdate: null
+        end_pubdate: null,
+        page: 1,
+        per_page: 20
       },
       // 默认频道数据
       channelOptions: [{ name: 'Java', id: 1 }],
       // 日期控件的数据
       dataValues: [],
       // 文章数据
-      articles: []
+      articles: [],
+      // 文章总数
+      total: 0
     }
   },
   created () {
@@ -127,15 +138,47 @@ export default {
         data: { data }
       } = await this.$http.get('articles', { params: this.reqParams })
       this.articles = data.results
-      console.log(data)
+      this.total = data.total_count
+      // console.log(data)
     },
+    // 处理选中日期的开始时间和结束时间
     changeDate (values) {
       // 给begin 和end赋值即可
       this.reqParams.begin_pubdate = values[0]
       this.reqParams.end_pubdate = values[1]
     },
+    // 筛选时重新获取文章数据
     search () {
+      this.reqParams.page = 1
       this.getArticles()
+    },
+    changePager (newPage) {
+      // newPage 当前点击的按钮的页码
+      // 更新提交给后台的参数
+      this.reqParams.page = newPage
+      // 获取列表数据
+      this.getArticles()
+    },
+    // 删除文章
+    del (id) {
+      this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        // 点击确认的时候 发删除请求,携带的参数是id拼接在地址后
+        await this.$http.delete(`articles/${id}`)
+        this.getArticles()
+        this.$message.success('删除成功')
+      }).catch(() => {
+        // 点击取消
+      })
+    },
+    // 编辑文章
+    edit (id) {
+      // 键值对传参用query,路径传参用params
+      // this.$router.push('/publish?id' + id)
+      this.$router.push({ path: '/publish', query: { id } })
     }
   },
   components: {}
