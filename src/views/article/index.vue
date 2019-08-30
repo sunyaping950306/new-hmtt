@@ -29,6 +29,8 @@
         </el-form-item>
         <el-form-item label="时间：">
           <el-date-picker
+            value-format="yyyy-MM-dd"
+            @change="changeDate"
             v-model="dataValues"
             type="daterange"
             range-separator="至"
@@ -37,7 +39,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">筛选</el-button>
+          <el-button type="primary" @click="search()">筛选</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -126,6 +128,14 @@ export default {
       } = await this.$http.get('articles', { params: this.reqParams })
       this.articles = data.results
       console.log(data)
+    },
+    changeDate (values) {
+      // 给begin 和end赋值即可
+      this.reqParams.begin_pubdate = values[0]
+      this.reqParams.end_pubdate = values[1]
+    },
+    search () {
+      this.getArticles()
     }
   },
   components: {}
