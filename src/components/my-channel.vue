@@ -1,5 +1,5 @@
 <template>
-  <el-select v-model="reqParams.channel_id">
+  <el-select :value="value" @change="fn">
     <el-option v-for="item in channelOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
   </el-select>
 </template>
@@ -8,18 +8,27 @@
 export default {
   name: 'my-channel',
   props: ['value'],
+
   data () {
     return {
-      childData: '我是子组件的值'
+      channelOptions: []
     }
+  },
+  created () {
+    // 获取频道数据
+    this.getChannelOptions()
   },
   methods: {
-    toParent () {
-      // 给父组件传值
-      this.$emit('input', this.childData)
+    fn (value) {
+      this.$emit('input', value)
+    },
+    async getChannelOptions () {
+      const {
+        data: { data }
+      } = await this.$http.get('channels')
+      this.channelOptions = data.channels
     }
   },
-
   components: {}
 }
 </script>

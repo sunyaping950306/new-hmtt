@@ -19,14 +19,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道：">
-          <el-select v-model="reqParams.channel_id">
-            <el-option
-              v-for="item in channelOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <my-channel v-model="reqParams.channel_id"></my-channel>
         </el-form-item>
         <el-form-item label="时间：">
           <el-date-picker
@@ -110,7 +103,7 @@ export default {
         per_page: 20
       },
       // 默认频道数据
-      channelOptions: [{ name: 'Java', id: 1 }],
+      // channelOptions: [{ name: 'Java', id: 1 }],
       // 日期控件的数据
       dataValues: [],
       // 文章数据
@@ -120,19 +113,11 @@ export default {
     }
   },
   created () {
-    // 获取频道数据
-    this.getChannelOptions()
     // 获取列表数据
     this.getArticles()
   },
   methods: {
 
-    async getChannelOptions () {
-      const {
-        data: { data }
-      } = await this.$http.get('channels')
-      this.channelOptions = data.channels
-    },
     async getArticles () {
       // 使用axios后
       // post 传参 axios.post('url',{参数对象})
