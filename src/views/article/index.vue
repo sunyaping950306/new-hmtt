@@ -1,5 +1,6 @@
 <template>
   <div class="article-container">
+
     <!-- 筛选容器 -->
     <el-card class="box-card">
       <!-- 面包屑 -->
@@ -97,6 +98,7 @@
 export default {
   data () {
     return {
+
       // 提交给后台的筛选条件 传参
       // 数据默认是''还是null的区别 ，如果是null则不会发送字段
       reqParams: {
@@ -124,6 +126,7 @@ export default {
     this.getArticles()
   },
   methods: {
+
     async getChannelOptions () {
       const {
         data: { data }
