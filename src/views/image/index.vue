@@ -6,7 +6,7 @@
       </div>
       <div style="margin-bottom:20px">
         <!-- 按钮式单选框 -->
-        <el-radio-group v-model="reqParams.collect" size="small">
+        <el-radio-group v-model="reqParams.collect" size="small" @change="search()">
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
@@ -15,10 +15,11 @@
       </div>
       <!-- 图片列表 -->
       <ul class="img-list">
-        <li v-for="item in 10" :key="item">
-          <img src="../../assets/images/avatar.jpg" alt />
-          <div class="icons">
-            <span class="el-icon-star-off" :class="{red:item%2}"></span>
+        <li v-for="item in images" :key="item.id">
+          <img :src="item.url" alt />
+          <!-- 删除、收藏 -->
+          <div class="icons" v-if="!reqParams.collect">
+            <span class="el-icon-star-off" :class="{red:item.is_collected}"></span>
             <span class="el-icon-delete"></span>
           </div>
         </li>
@@ -32,9 +33,29 @@
 export default {
   data () {
     return {
+      // 请求参数
       reqParams: {
-        collect: false
-      }
+        collect: false,
+        page: 1,
+        per_page: 10
+      },
+      // 素材列表
+      images: []
+    }
+  },
+  created () {
+    this.getImages()
+  },
+  methods: {
+    search () {
+      this.reqParams.page = 1
+      this.getImages()
+    },
+    // 获取素材
+    async getImages () {
+      const { data: { data } } = await this.$http.get('user/images', { params: this.reqParams })
+      // console.log(data)
+      this.images = data.results
     }
   },
   components: {}
