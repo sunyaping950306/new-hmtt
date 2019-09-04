@@ -10,8 +10,31 @@
           <el-radio-button :label="false">全部</el-radio-button>
           <el-radio-button :label="true">收藏</el-radio-button>
         </el-radio-group>
+
         <!-- 添加素材 -->
-        <el-button size="small" type="success" style="float:right">添加素材</el-button>
+        <el-button
+          size="small"
+          type="success"
+          style="float:right"
+          @click="dialogVisible = true"
+        >添加素材</el-button>
+        <!-- 添加素材 对话框、上传组件 -->
+        <el-dialog title="添加素材" :visible.sync="dialogVisible" width="300px">
+          <el-upload
+            class="avatar-uploader"
+            action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+            :show-file-list="false"
+            :headers="headers"
+            name="image"
+            :on-success="handleSuccess"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible=false">取消</el-button>
+          </span>
+        </el-dialog>
       </div>
       <!-- 图片列表 -->
       <ul class="img-list">
@@ -51,13 +74,36 @@ export default {
       // 素材列表
       images: [],
       // 分页相关
-      total: 0
+      total: 0,
+      // 默认隐藏对话框
+      dialogVisible: false,
+      // 后端返回的数据，控制上传按钮还是显示图片
+      imageUrl: '',
+      // 在请求头中携带token
+      headers: {
+        Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('new-hmtt')).token
+      }
     }
   },
   created () {
     this.getImages()
   },
   methods: {
+    // 上传素材成功后的处理函数
+    handleSuccess (res) {
+      // 预览 需要地址
+      // console.log(res)
+      this.imageUrl = res.data.url
+      this.$message.success('上传成功')
+      // 关闭对话框 更新列表
+      window.setTimeout(() => {
+        // 关闭对话框
+        this.dialogVisible = false
+        this.getImages()
+        // 清空预览区的图片，保证下次点开是空白
+        this.imageUrl = null
+      })
+    },
     // 点击分页上下页和页码时
     pager (newPage) {
       this.reqParams.page = newPage
@@ -73,7 +119,7 @@ export default {
       const {
         data: { data }
       } = await this.$http.get('user/images', { params: this.reqParams })
-      console.log(data)
+      // console.log(data)
       this.images = data.results
       // 获取总条数
       this.total = data.total_count

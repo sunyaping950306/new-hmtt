@@ -11,6 +11,8 @@ import router from '@/router'
 import axios from '@/api/axios.js'
 // 导入组件文件
 import components from '@/components'
+// 导入全局样式
+import '@/styles/index.less'
 
 Vue.prototype.$http = axios
 
