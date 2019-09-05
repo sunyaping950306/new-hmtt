@@ -47,7 +47,7 @@
               :class="{red:item.is_collected}"
               @click="toggleFav(item)"
             ></span>
-            <span class="el-icon-delete"></span>
+            <span class="el-icon-delete" @click="delImage(item.id)"></span>
           </div>
         </li>
       </ul>
@@ -97,10 +97,27 @@ export default {
     this.getImages()
   },
   methods: {
+    // 删除素材
+    delImage (id) {
+      this.$confirm('此操作将永久删除该图片, 是否继续?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        await this.$http.delete('user/images/' + id)
+        // 删除成功 提示 重新获取素材
+        this.$message.success('删除成功')
+        this.getImages()
+      }).catch(() => {})
+    },
     // 收藏 取消收藏
     async toggleFav (item) {
       // item包含 id is_collected是否收藏
-      const { data: { data } } = await this.$http.put('user/images/' + item.id, { collect: !item.is_collected })
+      const {
+        data: { data }
+      } = await this.$http.put('user/images/' + item.id, {
+        collect: !item.is_collected
+      })
       // 成功 图标切换颜色 red类名
       this.$message.success('操作成功')
       // item.is_collected = !item.is_collected
