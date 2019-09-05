@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <el-card>
       <div slot="header">
         <my-bread>素材管理</my-bread>
@@ -75,6 +75,8 @@ export default {
         page: 1,
         per_page: 10
       },
+      // 加载状态
+      loading: false,
       // 素材列表
       images: [],
       // 分页相关
@@ -104,18 +106,6 @@ export default {
       // item.is_collected = !item.is_collected
       item.is_collected = data.collect
     },
-    // async toggleFav (item) {
-    //   // item 包含 id  is_collected 是否收藏
-    //   const {
-    //     data: { data }
-    //   } = await this.$http.put('user/images/' + item.id, {
-    //     collect: !item.is_collected
-    //   })
-    //   // 成功  图标切换颜色  red类名
-    //   this.$message.success('操作成功')
-    //   // item.is_collected = !item.is_collected
-    //   item.is_collected = data.collect
-    // },
     // 上传素材成功后的处理函数
     handleSuccess (res) {
       // 预览 需要地址
@@ -143,6 +133,7 @@ export default {
     },
     // 获取素材
     async getImages () {
+      this.loading = true
       const {
         data: { data }
       } = await this.$http.get('user/images', { params: this.reqParams })
@@ -150,6 +141,7 @@ export default {
       this.images = data.results
       // 获取总条数
       this.total = data.total_count
+      this.loading = false
     }
   },
   components: {}
