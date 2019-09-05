@@ -42,7 +42,11 @@
           <img :src="item.url" alt />
           <!-- 删除、收藏 -->
           <div class="icons" v-if="!reqParams.collect">
-            <span class="el-icon-star-off" :class="{red:item.is_collected}"></span>
+            <span
+              class="el-icon-star-off"
+              :class="{red:item.is_collected}"
+              @click="toggleFav(item)"
+            ></span>
             <span class="el-icon-delete"></span>
           </div>
         </li>
@@ -81,7 +85,9 @@ export default {
       imageUrl: '',
       // 在请求头中携带token
       headers: {
-        Authorization: 'Bearer ' + JSON.parse(window.sessionStorage.getItem('new-hmtt')).token
+        Authorization:
+          'Bearer ' +
+          JSON.parse(window.sessionStorage.getItem('new-hmtt')).token
       }
     }
   },
@@ -89,6 +95,27 @@ export default {
     this.getImages()
   },
   methods: {
+    // 收藏 取消收藏
+    async toggleFav (item) {
+      // item包含 id is_collected是否收藏
+      const { data: { data } } = await this.$http.put('user/images/' + item.id, { collect: !item.is_collected })
+      // 成功 图标切换颜色 red类名
+      this.$message.success('操作成功')
+      // item.is_collected = !item.is_collected
+      item.is_collected = data.collect
+    },
+    // async toggleFav (item) {
+    //   // item 包含 id  is_collected 是否收藏
+    //   const {
+    //     data: { data }
+    //   } = await this.$http.put('user/images/' + item.id, {
+    //     collect: !item.is_collected
+    //   })
+    //   // 成功  图标切换颜色  red类名
+    //   this.$message.success('操作成功')
+    //   // item.is_collected = !item.is_collected
+    //   item.is_collected = data.collect
+    // },
     // 上传素材成功后的处理函数
     handleSuccess (res) {
       // 预览 需要地址
