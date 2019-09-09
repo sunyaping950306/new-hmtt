@@ -11,7 +11,9 @@
           <el-input style="width:300px" v-model="articleForm.title"></el-input>
         </el-form-item>
         <!-- 内容 -->
-        <el-form-item label="内容">富文本</el-form-item>
+        <el-form-item label="内容">
+          <quill-editor v-model="articleForm.content" :options="editorOption"></quill-editor>
+        </el-form-item>
         <!-- 封面 -->
         <el-form-item label="封面">
           <el-radio-group v-model="articleForm.cover.type">
@@ -29,7 +31,7 @@
           <my-channel v-model="articleForm.channel_id"></my-channel>
         </el-form-item>
         <!-- 发表、存入草稿按钮 -->
-         <el-form-item label="频道">
+        <el-form-item label="频道">
           <el-button type="primary">发表</el-button>
           <el-button>存入草稿</el-button>
         </el-form-item>
@@ -39,20 +41,38 @@
 </template>
 
 <script>
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
   data () {
     return {
       articleForm: {
         title: '',
+        content: '',
         cover: {
           type: 1,
           images: ''
         },
         channel_id: null
+      },
+      // 编辑器配置对象
+      editorOption: {
+        placeholder: '',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'header': 1 }, { 'header': 2 }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }]
+          ]
+        }
       }
     }
   },
-  components: {}
+  components: { quillEditor }
 }
 </script>
 
